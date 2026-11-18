@@ -135,9 +135,9 @@ await runBars({
     }
     // 8) Normal exit: take profit, stop loss, or max hold; split when large.
     if (qty > 0n && failsafe === 0 && exitStage === 0) {
-      const unr = Number(state.value(SYM, qty)) / Number(cost) - 1;
+      const value = Number(state.value(SYM, qty));
+      const unr = value / Number(cost) - 1;
       if (unr >= TP_BPS / 10_000 || unr <= SL_BPS / 10_000 || state.seq - entrySeq >= MAX_HOLD) {
-        const value = Number(state.value(SYM, qty));
         if (value > (Number(eq) * SPLIT_MIN_BPS) / 10_000) {
           exitStage = 1;
           return [{ side: 'sell' as const, symbol: SYM, qty: qty / 2n, max_slippage_bps: SLIP_BPS, client_id: cid() }];
